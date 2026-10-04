@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusPilot — Your Smart Student OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">CP</div>
+        <div>
+          <strong>CampusPilot</strong>
+          <span>Smart Student OS</span>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-section="dashboard">⌂ <span>Dashboard</span></button>
+        <button class="nav-item" data-section="attendance">◉ <span>Attendance AI</span></button>
+        <button class="nav-item" data-section="planner">✦ <span>Smart Planner</span></button>
+        <button class="nav-item" data-section="tasks">✓ <span>Tasks</span></button>
+        <button class="nav-item" data-section="focus">◷ <span>Focus Lab</span></button>
+      </nav>
+      <div class="sidebar-note">
+        <span class="pulse"></span>
+        <div><b>Hackathon build</b><br>Local-first • No login • No backend</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">PERSONAL COMMAND CENTER</p>
+          <h1 id="pageTitle">Good evening 👋</h1>
+          <p class="muted">Turn your college workload into a plan you can actually finish.</p>
+        </div>
+        <button class="primary" id="quickPlanBtn">✦ Generate my plan</button>
+      </header>
+
+      <section id="dashboard" class="section active">
+        <div class="hero-grid">
+          <div class="hero-card">
+            <div>
+              <span class="badge">SMART MODE</span>
+              <h2>Know what to do <em>next.</em></h2>
+              <p>CampusPilot combines attendance pressure, deadlines and available study time to prioritize your next action.</p>
+              <button class="primary" onclick="showSection('planner')">Open smart planner →</button>
+            </div>
+            <div class="hero-orb"><div>✦</div></div>
+          </div>
+          <div class="score-card">
+            <span class="muted">Student health score</span>
+            <strong id="healthScore">82</strong>
+            <div class="meter"><span id="healthMeter"></span></div>
+            <small id="healthText">You're in a manageable zone.</small>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><span>Attendance</span><strong id="dashAttendance">72%</strong><small id="attendanceStatus">Needs attention</small></div>
+          <div class="stat-card"><span>Open tasks</span><strong id="dashTasks">4</strong><small>Across all subjects</small></div>
+          <div class="stat-card"><span>Study target</span><strong>3h 30m</strong><small>Today's adaptive goal</small></div>
+          <div class="stat-card"><span>Focus streak</span><strong id="dashStreak">3 days</strong><small>Keep it going 🔥</small></div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head"><div><span class="eyebrow">RIGHT NOW</span><h3>Recommended actions</h3></div></div>
+            <div id="recommendations" class="recommendations"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><span class="eyebrow">TODAY</span><h3>Mini schedule</h3></div><button class="text-btn" onclick="showSection('planner')">Edit</button></div>
+            <div class="timeline">
+              <div><time>5:30</time><span><b>DBMS revision</b><small>45 min • High priority</small></span></div>
+              <div><time>6:30</time><span><b>Break + dinner</b><small>30 min • Recharge</small></span></div>
+              <div><time>7:00</time><span><b>Software Engineering</b><small>60 min • Assignment due tomorrow</small></span></div>
+              <div><time>8:15</time><span><b>Focus sprint</b><small>25 min • No notifications</small></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="attendance" class="section">
+        <div class="section-heading"><div><span class="eyebrow">ATTENDANCE AI</span><h2>Can I afford to miss class?</h2><p class="muted">A what-if simulator that tells you the safest choice.</p></div></div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="form-grid">
+              <label>Classes attended<input id="attended" type="number" value="263" min="0"></label>
+              <label>Total classes<input id="total" type="number" value="365" min="1"></label>
+              <label>Classes per day<input id="perDay" type="number" value="6" min="1"></label>
+              <label>Working days left<input id="daysLeft" type="number" value="18" min="0"></label>
+            </div>
+            <button class="primary full" onclick="calculateAttendance()">Calculate safe plan</button>
+          </div>
+          <div class="panel result-panel">
+            <span class="eyebrow">PREDICTION</span>
+            <div class="big-result" id="attResult">72.05%</div>
+            <div id="attMessage">Loading recommendation…</div>
+            <div class="result-list" id="attDetails"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><span class="eyebrow">SUBJECT RISK</span><h3>Simple risk model</h3></div></div>
+          <div class="risk-list">
+            <div><span><b>DBMS</b><small>68% • Critical</small></span><div class="risk-bar"><i style="width:32%"></i></div></div>
+            <div><span><b>Statistics</b><small>74% • Watch</small></span><div class="risk-bar"><i style="width:55%"></i></div></div>
+            <div><span><b>SE</b><small>81% • Safe</small></span><div class="risk-bar"><i style="width:78%"></i></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="planner" class="section">
+        <div class="section-heading"><div><span class="eyebrow">ADAPTIVE PLANNER</span><h2>Your plan changes with your pressure.</h2><p class="muted">The engine prioritizes urgency × academic risk × effort.</p></div></div>
+        <div class="planner-grid">
+          <div class="panel">
+            <h3>Today's inputs</h3>
+            <label class="range-label">Available study time <b id="timeValue">210 min</b></label>
+            <input id="studyTime" type="range" min="30" max="360" step="15" value="210" oninput="document.getElementById('timeValue').textContent=this.value+' min'">
+            <label class="range-label">Energy level <b id="energyValue">7/10</b></label>
+            <input id="energy" type="range" min="1" max="10" value="7" oninput="document.getElementById('energyValue').textContent=this.value+'/10'">
+            <button class="primary full" onclick="generatePlan()">Generate adaptive plan</button>
+          </div>
+          <div class="panel">
+            <span class="eyebrow">AI-STYLE OUTPUT</span>
+            <h3>Recommended sequence</h3>
+            <div id="planOutput" class="plan-output"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tasks" class="section">
+        <div class="section-heading"><div><span class="eyebrow">TASK ENGINE</span><h2>Everything that needs doing.</h2></div></div>
+        <div class="add-task">
+          <input id="taskInput" placeholder="Add a task, e.g. Finish DBMS ER diagram">
+          <select id="taskPriority"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select>
+          <button class="primary" onclick="addTask()">Add</button>
+        </div>
+        <div id="taskList" class="task-list"></div>
+      </section>
+
+      <section id="focus" class="section">
+        <div class="section-heading"><div><span class="eyebrow">FOCUS LAB</span><h2>One sprint. One outcome.</h2><p class="muted">A distraction-free timer for your highest-priority task.</p></div></div>
+        <div class="focus-wrap panel">
+          <div class="timer-ring"><span id="timer">25:00</span><small>FOCUS</small></div>
+          <h3 id="focusLabel">DBMS — ER Diagram</h3>
+          <p class="muted">Put your phone away. The only goal is to finish this sprint.</p>
+          <div class="timer-actions"><button class="primary" id="timerBtn" onclick="toggleTimer()">Start sprint</button><button class="secondary" onclick="resetTimer()">Reset</button></div>
+        </div>
+      </section>
+
+      <footer>CampusPilot • Built for ALGOTHON’26 • Local-first prototype</footer>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
